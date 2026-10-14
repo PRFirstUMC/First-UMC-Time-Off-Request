@@ -94,6 +94,7 @@
     }
     .cat:hover, .cat:focus-visible { border-color: var(--purple); background: #F1E9FE; outline: none; }
     .cat strong { display: block; font-size: 1.02rem; font-weight: 500; color: var(--purple-dark); margin-bottom: 0.2rem; }
+    .cat strong .emoji { display: inline; margin-right: 0.4rem; font-size: 1.1rem; color: inherit; }
     .cat span { display: block; font-size: 0.88rem; color: var(--text-light); line-height: 1.45; }
     .back { background: none; border: 0; color: var(--purple); width: auto; padding: 0; margin-bottom: 1rem; font-size: 0.95rem; font-weight: 500; }
     .back:hover { background: none; text-decoration: underline; }
@@ -241,43 +242,49 @@
   <script>
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQkb38RzI3Gh9qSs3UqHz7r4tEnh7MZrlgDu9UI7MTvEJI6KBDJSBVmdTp8FWTEi4iqA/exec';
 
-    // Category text is quoted from the Staff Handbook (October 2026 revision).
+    // Category text follows the Staff Handbook (October 2026 revision), written to the staff member.
     const CATEGORIES = [
  {
   "id": "vacation",
   "title": "Vacation",
-  "blurb": "Planned time off that is part of your compensation.",
+  "blurb": "Planned time away that's part of your compensation.",
   "timing": "Planned",
   "desc": [
-   "Vacation time is part of each staff member’s compensation and will be included in their hiring letter. Vacation must be scheduled in advance with the supervisor’s approval, with the church’s needs in mind. Staff members should give at least two weeks’ notice before taking vacation, if at all possible.",
-   "Time away of more than two weeks in a row, in any combination of vacation, paid leave and unpaid time, must be approved by the pastor and SPRC."
+   "Your vacation is part of your compensation, and your hiring letter sets the amount. Please schedule it ahead with your supervisor, with the church's needs in mind, and give at least two weeks' notice when you can.",
+   "Vacation is earned evenly through the year and must be used by December 31, since unused vacation doesn't carry over to the next year.",
+   "Time away of more than two weeks in a row, in any mix of vacation, PTO, and unpaid time, needs the approval of the pastor and SPRC. That limit doesn't apply to PTO for an illness or another unplanned absence, or to leave required by law."
   ],
   "extras": [],
   "group": "common",
-  "notice": 14
+  "notice": 14,
+  "emoji": "🏖️"
  },
  {
   "id": "paid",
-  "title": "Paid Leave",
-  "blurb": "Time off for any reason, including illness. It replaces sick days.",
+  "title": "Paid Time Off (PTO)",
+  "blurb": "Time off for any reason, including illness. PTO replaces sick days.",
   "timing": "",
   "desc": [
-   "Paid leave replaces sick days and is in addition to vacation. Paid leave may be used for any reason, including illness. Staff members do not need to give a reason or provide documentation. Paid leave may be used in increments as small as one hour.",
-   "For a planned absence, staff members should tell their supervisor at least seven days ahead when possible. For an unplanned absence, staff members should tell their supervisor as soon as is practical by phone, text or email. Someone else may give notice on their behalf. Staff members will not be asked to find someone to cover their work.",
-   "After an unplanned absence, the staff member fills out the form on their return; the form doesn’t ask for a reason.",
-   "Holy Week (the week before Easter) and the week leading up to Christmas, including Christmas Eve, are the church’s busiest times of the year. During those weeks, the supervisor may deny a request to use paid leave for a planned absence when the church’s work requires the staff member. It does not apply to paid leave used for an illness or another unplanned absence, which may be taken at any time."
+   "Paid time off (PTO) replaces sick days and is separate from vacation. You may use it for any reason, including illness, without giving a reason or a doctor's note. You may take it in blocks as small as one hour.",
+   "Each January 1, the church gives you PTO based on your regular weekly schedule: 13 hours if you work up to 10 hours a week, 26 hours for up to 20, 39 hours for up to 30, and 40 hours for more than 30. New staff members may begin using PTO after 90 days.",
+   "Unused PTO doesn't carry over to the next year, except for up to 40 hours added for extra work. It isn't paid out when employment ends.",
+   "For a planned absence, please tell your supervisor at least seven days ahead when you can. For an unplanned absence, tell your supervisor as soon as you reasonably can by phone, text, or email; someone else may let them know for you. You won't be asked to find someone to cover your work. Please fill out this form when you return.",
+   "During Holy Week (the week before Easter) and the week leading up to Christmas, including Christmas Eve, your supervisor may decline a request for planned PTO when the church needs you. PTO for an illness or another unplanned absence may be taken at any time."
   ],
   "extras": [],
   "group": "common",
-  "plannedNotice": 7
+  "plannedNotice": 7,
+  "emoji": "🗓️"
  },
  {
   "id": "comp",
-  "title": "Compensatory Time",
+  "title": "Flex Time",
   "blurb": "For exempt staff members, time off in return for approved extra hours.",
   "timing": "Planned",
   "desc": [
-   "Compensatory time is available only to exempt staff members. An exempt staff member who works extra hours with their supervisor’s advance approval may later take equal time off, with supervisor permission. Compensatory time may not be taken for more than three days in a row or accumulated beyond three days."
+   "Flex time is open only to exempt staff members; the handbook calls it compensatory time. When you work extra hours with your supervisor's approval ahead of time, you may later take the same amount of time off, with your supervisor's permission.",
+   "You may not take more than three days of flex time in a row or build up more than three days.",
+   "Non-exempt staff members don't use flex time. They're paid time and a half for approved hours over 40 in a workweek, or, with their supervisor's approval, they may shift hours within the same week."
   ],
   "extras": [
    {
@@ -288,7 +295,8 @@
     "req": true
    }
   ],
-  "group": "common"
+  "group": "common",
+  "emoji": "🔄"
  },
  {
   "id": "bereavement",
@@ -296,7 +304,8 @@
   "blurb": "Three paid days for the death of an immediate family member.",
   "timing": "",
   "desc": [
-   "Staff members will receive three days of paid bereavement leave for the death of an immediate family member: spouse, domestic partner, child, parent, brother, sister, grandparent or the in-law of any of these. The supervisor may approve additional time off for travel or other special circumstances. Staff members may use paid leave or vacation for that time or take it without pay."
+   "You receive three days of paid bereavement leave for the death of an immediate family member: a spouse, domestic partner, child, parent, brother, sister, or grandparent, or the in-law of any of these.",
+   "Your supervisor may approve more time for travel or other special circumstances. You may use PTO or vacation for that extra time or take it without pay."
   ],
   "extras": [
    {
@@ -330,7 +339,7 @@
     "type": "radio",
     "label": "How would you like to cover the extra time?",
     "options": [
-     "Paid leave",
+     "PTO",
      "Vacation",
      "Without pay"
     ],
@@ -341,7 +350,8 @@
     ]
    }
   ],
-  "group": "common"
+  "group": "common",
+  "emoji": "🕊️"
  },
  {
   "id": "civic",
@@ -349,8 +359,8 @@
   "blurb": "Paid time to serve on a jury or to vote on an election day.",
   "timing": "Planned",
   "desc": [
-   "Short-term absences resulting from jury duty will not be charged against a staff member’s paid leave or vacation. Staff members will be paid their regular base rate for authorized absences to serve as a juror, up to a limit of two workweeks per calendar year.",
-   "A staff member who is entitled to vote may take up to two hours of paid time off to vote on an election day. They should ask their supervisor before election day; the supervisor may set the hours. It is not charged against paid leave or vacation."
+   "Jury duty: While you serve on a jury, you're paid your regular base rate for up to two workweeks per calendar year. The time isn't taken from your PTO or vacation.",
+   "Voting: If you're entitled to vote, you may take up to two hours off with pay on an election day. Please ask your supervisor before election day, since your supervisor may set the hours. When your workday starts less than two hours after the polls open and ends less than two hours before they close, the time off falls during working hours. Voting time isn't taken from your PTO or vacation either."
   ],
   "extras": [
    {
@@ -366,7 +376,7 @@
    {
     "id": "juryNote",
     "type": "note",
-    "text": "Jury duty is paid at your regular base rate, up to two workweeks per calendar year, and isn't charged against your paid leave or vacation.",
+    "text": "You're paid your regular base rate for up to two workweeks per calendar year, and the time isn't taken from your PTO or vacation.",
     "showIf": [
      "civicType",
      "Jury duty"
@@ -375,14 +385,15 @@
    {
     "id": "voteNote",
     "type": "note",
-    "text": "You may take up to two hours of paid time off to vote. Please ask your supervisor before election day; the supervisor may set the hours.",
+    "text": "You may take up to two hours off with pay. Please ask your supervisor before election day, since your supervisor may set the hours.",
     "showIf": [
      "civicType",
      "Voting"
     ]
    }
   ],
-  "group": "common"
+  "group": "common",
+  "emoji": "🗳️"
  },
  {
   "id": "unpaid",
@@ -390,8 +401,9 @@
   "blurb": "Up to five workdays a year for an unforeseen need.",
   "timing": "Unplanned",
   "desc": [
-   "A staff member may ask for unpaid time off for an unforeseen need, such as an illness, a family emergency or a death in the family. The pastor and the SPRC chair or co-chairs review every such request. This unpaid time off is limited to five scheduled workdays in a calendar year. A staff member must use their vacation first but may choose whether to use their paid leave first.",
-   "A longer unforeseen need is handled as a medical or family leave of absence, whatever its length. Planned time away is taken as vacation or, when vacation doesn’t cover it, as a personal leave (see Long-Term Leaves and Absences)."
+   "You may ask for unpaid time off for an unforeseen need, such as an illness, a family emergency, or a death in the family. It's limited to five scheduled workdays in a calendar year, and the pastor and the SPRC chair or co-chairs review every request.",
+   "You must use your vacation first, though you may choose whether to use your PTO first.",
+   "A longer unforeseen need is handled as a medical or family leave. Planned time away is taken as vacation or, when vacation doesn't cover it, as a personal leave."
   ],
   "extras": [
    {
@@ -404,7 +416,7 @@
    {
     "id": "usePaidFirst",
     "type": "radio",
-    "label": "Would you like to use your remaining paid leave first?",
+    "label": "Would you like to use your remaining PTO first?",
     "options": [
      "Yes",
      "No"
@@ -423,7 +435,8 @@
     "req": false
    }
   ],
-  "group": "special"
+  "group": "special",
+  "emoji": "⏸️"
  },
  {
   "id": "personal",
@@ -432,10 +445,10 @@
   "timing": "Planned",
   "notice": 30,
   "desc": [
-   "Personal – An absence of up to three weeks. Personal leave may be used for any reason other than those below, such as a visit to family abroad, education or personal business. It is also the only way to take planned unpaid time off, even when the absence is shorter than two weeks.",
-   "A staff member who has worked at First UMC for at least one year may take one personal leave in any two-year period and should ask for it at least 30 days ahead. A personal leave and any vacation combined with it may not last more than three weeks in a row.",
-   "In deciding a request, SPRC considers the church’s needs at that time of year, including Holy Week and Christmas, whether the staff member’s work can be covered and the other leave the staff member has taken in the past year. SPRC does not weigh the reason for the leave and will give the reason for any denial in writing. The staff member’s position will be held through an approved personal leave.",
-   "A staff member who needs a leave of absence should ask the pastor in writing. The pastor will bring the request, with a recommendation, to SPRC, which will decide."
+   "A personal leave is planned unpaid time away of up to three weeks for a reason other than a medical, family, or parental need, such as a visit to family abroad, education, or personal business. It's also the only way to take planned unpaid time off, even for less than two weeks.",
+   "Once you've worked at First UMC for at least one year, you may take one personal leave in any two-year period. Please ask at least 30 days ahead. A personal leave and any vacation combined with it may not run more than three weeks in a row.",
+   "This form sends your request to the pastor, who brings it to SPRC with a recommendation. SPRC considers the church's needs at that time of year, including Holy Week and Christmas, whether your work can be covered, and the other leave you've taken in the past year. SPRC doesn't weigh your reason for the leave and will explain any denial in writing. Your position is held through an approved personal leave.",
+   "Time off for religious observance is handled as an accommodation instead, so please speak with the pastor about it."
   ],
   "extras": [
    {
@@ -461,20 +474,21 @@
    }
   ],
   "group": "special",
-  "fullOnly": true
+  "fullOnly": true,
+  "emoji": "🧳"
  },
  {
   "id": "loa",
   "title": "Medical, Family, or Parental Leave",
-  "blurb": "A leave of absence for your own serious illness, to care for a family member, or for a new child.",
+  "blurb": "A leave of absence for your own serious illness, a seriously ill family member, or a new child.",
   "timing": "",
   "lastLabel": "Expected last day of leave",
   "desc": [
-   "A leave of absence is unpaid time off of more than two weeks. Staff members who have worked at First UMC for at least three months may apply for an unpaid leave of absence for personal, medical, family or parental reasons.",
-   "Medical and Family – An absence of up to three months. Such leave is for a seriously ill staff member (medical leave) or to care for a child, spouse/partner or parent who is seriously ill (family leave). Before returning from medical leave, the staff member may be required to provide proof of ability to return to work and a list of any work limitations from their treating physician.",
-   "Parental – An absence of up to six weeks for the birth, adoption or guardianship of a child by a staff member.",
-   "A staff member who needs a leave of absence should ask the pastor in writing. The pastor will bring the request, with a recommendation, to SPRC, which will decide. The decision will be given to the staff member in writing. A staff member on leave may choose to use their paid leave and vacation first; the rest of the leave is unpaid. During the leave, the staff member should keep the pastor informed.",
-   "If a leave lasts more than three months, the church cannot guarantee a return to the same position but will make every effort to place the staff member in an open position for which they are qualified."
+   "These are unpaid leaves of absence, open to you once you've worked at First UMC for at least three months.",
+   "Medical leave is for your own serious illness. Family leave is for caring for a child, spouse or partner, or parent who is seriously ill. Either one may last up to three months. Before you return from medical leave, you may be asked for a note from your treating physician confirming that you can return and listing any limits on your work.",
+   "Parental leave is for the birth, adoption, or guardianship of a child and may last up to six weeks.",
+   "This form sends your written request to the pastor, who brings it to SPRC with a recommendation. SPRC decides and tells you in writing. You may use your PTO and vacation first; the rest of the leave is unpaid. While you're on leave, please keep the pastor informed.",
+   "If a leave lasts more than three months, the church can't guarantee your same position but will make every effort to place you in an open position that fits your qualifications. If you don't return the day after an approved leave ends, your employment ends unless SPRC has extended the leave or approved an accommodation."
   ],
   "extras": [
    {
@@ -518,10 +532,10 @@
    {
     "id": "useBank",
     "type": "radio",
-    "label": "Would you like to use your paid leave and vacation first?",
+    "label": "Would you like to use your PTO and vacation first?",
     "options": [
      "Yes, both",
-     "Paid leave only",
+     "PTO only",
      "Vacation only",
      "No, all unpaid"
     ],
@@ -529,7 +543,8 @@
    }
   ],
   "group": "special",
-  "fullOnly": true
+  "fullOnly": true,
+  "emoji": "👪"
  },
  {
   "id": "law",
@@ -538,12 +553,14 @@
   "timing": "",
   "info": true,
   "desc": [
-   "Military leave and domestic violence leave are required by law. The three-month waiting period and the SPRC approval described above don’t apply to them. The law sets the staff member’s right to return to work. A staff member who needs one of these leaves should tell the pastor. The pastor will tell SPRC only that a staff member is on a leave required by law, without the reason or other details.",
-   "Military – Leave for military service, training, and National Guard or Reserve duty will be provided as required by federal and state law, including the Uniformed Services Employment and Reemployment Rights Act (USERRA).",
-   "Domestic, sexual or gender violence – Up to four weeks of unpaid leave in any 12-month period, as required by the Illinois Victims’ Economic Security and Safety Act (VESSA). This leave is available to a staff member who is a victim, or whose family or household member is a victim, of domestic, sexual or gender violence or another crime of violence. Requests and related information will be kept confidential."
+   "Military leave and domestic violence leave are required by law, so no waiting period or SPRC approval applies, and the law protects your right to return to work. Please tell the pastor directly instead of using this form. The pastor tells SPRC only that a staff member is on a leave required by law, without the reason or any other details.",
+   "Military leave covers service, training, and National Guard or Reserve duty, as federal and state law require, including USERRA (the Uniformed Services Employment and Reemployment Rights Act).",
+   "Domestic, sexual, or gender violence leave gives you up to four weeks of unpaid leave in any 12-month period under Illinois law (VESSA, the Victims' Economic Security and Safety Act). It's available when you, or a family or household member, are a victim of domestic, sexual, or gender violence or another crime of violence. You may use it for medical care, counseling, victim services, safety planning, or legal help, and up to two weeks of it to grieve, attend the funeral, or make arrangements after a family or household member is killed in a crime of violence.",
+   "Please give 48 hours' notice when you can. You may choose to use PTO during this leave. Your request will be kept confidential."
   ],
   "extras": [],
-  "group": "special"
+  "group": "special",
+  "emoji": "🛡️"
  }
 ];
 
@@ -556,7 +573,7 @@
 
     const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    const card = (c) => '<button type="button" class="cat" data-id="' + c.id + '"><strong>' + esc(c.title) + '</strong><span>' + esc(c.blurb) + '</span></button>';
+    const card = (c) => '<button type="button" class="cat" data-id="' + c.id + '"><strong>' + (c.emoji ? '<span class="emoji" aria-hidden="true">' + c.emoji + '</span>' : '') + esc(c.title) + '</strong><span>' + esc(c.blurb) + '</span></button>';
     $('gridCommon').innerHTML = CATEGORIES.filter(c => c.group === 'common').map(card).join('');
     $('gridSpecial').innerHTML = CATEGORIES.filter(c => c.group === 'special').map(card).join('');
     $('home').addEventListener('click', (e) => {
@@ -638,7 +655,7 @@
     function refresh() {
       if (!current) return;
       const timing = current.id === 'paid' ? radio('timing') : current.timing;
-      // For paid leave, the rest of the form appears once planned or unplanned is chosen.
+      // For PTO, the rest of the form appears once planned or unplanned is chosen.
       hide($('when'), current.id === 'paid' && !timing);
       const past = timing === 'Unplanned';
       const len = current.fullOnly ? 'Full' : radio('length');
@@ -721,7 +738,7 @@
       return !first;
     }
 
-    // Vacation asks for two weeks' notice, planned paid leave seven days and personal leave 30; warn without blocking.
+    // Vacation asks for two weeks' notice, planned PTO seven days and personal leave 30; warn without blocking.
     function checkNotice() {
       const w = $('noticeWarn');
       const notice = current && (current.notice || (current.plannedNotice && radio('timing') === 'Planned' ? current.plannedNotice : 0));
