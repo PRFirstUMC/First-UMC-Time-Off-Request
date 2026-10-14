@@ -86,7 +86,31 @@
     .banner.err { background: #FDECEA; border: 1px solid var(--error); }
     .again { margin-top: 0.75rem; background: var(--white); color: var(--purple); border: 1px solid var(--purple); }
     .again:hover { background: #F1E9FE; }
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .cat {
+      display: block; width: 100%; text-align: left; padding: 1rem 1.1rem;
+      background: var(--white); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .cat:hover, .cat:focus-visible { border-color: var(--purple); background: #F1E9FE; outline: none; }
+    .cat strong { display: block; font-size: 1.02rem; font-weight: 500; color: var(--purple-dark); margin-bottom: 0.2rem; }
+    .cat span { display: block; font-size: 0.88rem; color: var(--text-light); line-height: 1.45; }
+    .back { background: none; border: 0; color: var(--purple); width: auto; padding: 0; margin-bottom: 1rem; font-size: 0.95rem; font-weight: 500; }
+    .back:hover { background: none; text-decoration: underline; }
+    .policy h2 { font-family: 'EB Garamond', serif; font-size: 1.45rem; margin-bottom: 0.6rem; }
+    .policy p { font-size: 0.95rem; }
+    .policy p + p { margin-top: 0.6rem; }
+    .policy .source { margin-top: 0.9rem; font-size: 0.82rem; color: var(--text-light); }
+    .policy .callout { margin-top: 1rem; padding: 0.85rem 1rem; background: #F1E9FE; border-radius: 6px; }
+    select { width: 100%; padding: 0.65rem 0.75rem; font-family: inherit; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--white); color: var(--text); }
+    .check { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 400; }
+    .check input { margin-top: 0.35rem; width: 18px; height: 18px; accent-color: var(--purple); flex-shrink: 0; }
+    .warn { display: none; margin-top: 0.4rem; font-size: 0.85rem; color: #8a5a00; }
+    .warn.show { display: block; }
+    .has-error select { border-color: var(--error); }
+    #extras .form-group:last-child { margin-bottom: 1.25rem; }
     @media (max-width: 520px) {
+      .cat-grid { grid-template-columns: 1fr; }
       .row { grid-template-columns: 1fr; gap: 0; }
       .row .form-group { margin-bottom: 1.25rem; }
       .header-inner { flex-direction: column; gap: 0.6rem; text-align: center; }
@@ -106,112 +130,410 @@
   </header>
 
   <main class="container">
-    <div class="card intro">
-      <p>Use this form to request vacation or paid leave. Your request goes to the pastor and the church office coordinator, who keeps a record of each staff member's vacation and paid leave.</p>
-      <p>When an absence is unplanned, please fill out the form when you return. The form doesn't ask for a reason, so you don't need to give one.</p>
-    </div>
-
-    <div id="banner" class="banner" role="status" aria-live="polite"></div>
-
-    <form id="form" class="card" novalidate>
-      <div class="form-group" data-field="name">
-        <label for="name">Your name<span class="req">*</span></label>
-        <input type="text" id="name" name="name" autocomplete="name">
-        <div class="field-error">Please enter your name.</div>
+    <section id="home">
+      <div class="card intro">
+        <p>Please choose the kind of time off you need. Each choice shows what the staff handbook says about it, followed by a short request form. Your request goes to the pastor and the church office coordinator, who keeps a record of each staff member's time off. A copy of your request will also come back to you.</p>
+        <p>When an absence is unplanned, please fill out the form when you return.</p>
       </div>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
 
-      <div class="form-group" data-field="email">
-        <label for="email">Your email<span class="req">*</span><span class="hint">A copy of your request will be sent here.</span></label>
-        <input type="email" id="email" name="email" autocomplete="email">
-        <div class="field-error">Please enter a valid email address.</div>
-      </div>
+    <section id="detail" hidden>
+      <button type="button" class="back" id="back">&larr; All types of time off</button>
+      <div class="card policy" id="policy"></div>
 
-      <fieldset class="form-group" data-field="type">
-        <legend>Type of time off<span class="req">*</span></legend>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="type" value="Vacation"><span>Vacation</span></label>
-          <label class="choice"><input type="radio" name="type" value="Paid leave"><span>Paid leave</span></label>
+      <div id="banner" class="banner" role="status" aria-live="polite"></div>
+
+      <form id="form" class="card" novalidate>
+        <div class="form-group" data-field="name">
+          <label for="name">Your name<span class="req">*</span></label>
+          <input type="text" id="name" name="name" autocomplete="name">
+          <div class="field-error">Please enter your name.</div>
         </div>
-        <div class="field-error">Please choose vacation or paid leave.</div>
-      </fieldset>
 
-      <fieldset class="form-group" data-field="timing">
-        <legend>Planned or unplanned<span class="req">*</span><span class="hint">For planned paid leave, please give at least seven days' notice when you can.</span></legend>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="timing" value="Planned"><span>Planned ahead</span></label>
-          <label class="choice"><input type="radio" name="timing" value="Unplanned"><span>Unplanned (already taken)</span></label>
+        <div class="form-group" data-field="email">
+          <label for="email">Your email<span class="req">*</span><span class="hint">A copy of your request will be sent here.</span></label>
+          <input type="email" id="email" name="email" autocomplete="email">
+          <div class="field-error">Please enter a valid email address.</div>
         </div>
-        <div class="field-error">Please choose one.</div>
-      </fieldset>
 
-      <div class="row">
-        <div class="form-group" data-field="firstDay">
-          <label for="firstDay">First day off<span class="req">*</span></label>
-          <input type="date" id="firstDay" name="firstDay">
-          <div class="field-error">Please choose a date.</div>
+        <fieldset class="form-group" data-field="timing" id="timingGroup">
+          <legend>Planned or unplanned<span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="timing" value="Planned"><span>Planned ahead</span></label>
+            <label class="choice"><input type="radio" name="timing" value="Unplanned"><span>Unplanned (already taken)</span></label>
+          </div>
+          <div class="field-error">Please choose one.</div>
+        </fieldset>
+
+        <div class="row">
+          <div class="form-group" data-field="firstDay">
+            <label for="firstDay">First day off<span class="req">*</span></label>
+            <input type="date" id="firstDay" name="firstDay">
+            <div class="field-error">Please choose a date.</div>
+          </div>
+          <div class="form-group" data-field="lastDay">
+            <label for="lastDay" id="lastDayLabel">Last day off<span class="req">*</span></label>
+            <input type="date" id="lastDay" name="lastDay">
+            <div class="field-error">Please choose a date on or after the first day.</div>
+          </div>
         </div>
-        <div class="form-group" data-field="lastDay">
-          <label for="lastDay">Last day off<span class="req">*</span></label>
-          <input type="date" id="lastDay" name="lastDay">
-          <div class="field-error">Please choose a date on or after the first day.</div>
+        <div class="warn" id="noticeWarn"></div>
+
+        <div class="form-group" data-field="amount">
+          <label for="amount">Time requested<span class="req">*</span><span class="hint">For example, "3 days" or "4 hours."</span></label>
+          <input type="text" id="amount" name="amount">
+          <div class="field-error">Please enter the days or hours you'll be away.</div>
         </div>
-      </div>
 
-      <div class="form-group" data-field="amount">
-        <label for="amount">Time requested<span class="req">*</span><span class="hint">For example, "3 days" or "4 hours."</span></label>
-        <input type="text" id="amount" name="amount">
-        <div class="field-error">Please enter the days or hours you'll be away.</div>
-      </div>
+        <div id="extras"></div>
 
-      <div class="form-group">
-        <label for="notes">Notes (optional)<span class="hint">Use this space for anything the office should know about coverage while you're away, but please leave out medical or personal details.</span></label>
-        <textarea id="notes" name="notes"></textarea>
-      </div>
+        <div class="form-group">
+          <label for="notes">Notes (optional)<span class="hint">Use this space for anything the office should know about coverage while you're away, but please leave out medical or personal details.</span></label>
+          <textarea id="notes" name="notes"></textarea>
+        </div>
 
-      <div class="hp" aria-hidden="true">
-        <label for="website">Leave this blank</label>
-        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-      </div>
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this blank</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
 
-      <div class="form-group">
-        <button type="submit" id="submit">Submit request</button>
-      </div>
-    </form>
+        <div class="form-group">
+          <button type="submit" id="submit">Submit request</button>
+        </div>
+      </form>
+    </section>
   </main>
 
   <script>
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQkb38RzI3Gh9qSs3UqHz7r4tEnh7MZrlgDu9UI7MTvEJI6KBDJSBVmdTp8FWTEi4iqA/exec';
 
-    const form = document.getElementById('form');
+    // Category text is quoted from the Staff Handbook (October 2026 revision).
+    const CATEGORIES = [
+ {
+  "id": "vacation",
+  "title": "Vacation",
+  "blurb": "Planned time off that is part of your compensation.",
+  "timing": "Planned",
+  "desc": [
+   "Vacation time is part of each staff member’s compensation and will be included in their hiring letter. Vacation must be scheduled in advance with the supervisor’s approval, with the church’s needs in mind. Staff members should give at least two weeks’ notice before taking vacation, if at all possible.",
+   "Time away of more than two weeks in a row, in any combination of vacation, paid leave and unpaid time, must be approved by the pastor and SPRC."
+  ],
+  "extras": []
+ },
+ {
+  "id": "paid",
+  "title": "Paid Leave",
+  "blurb": "Time off for any reason, including illness. It replaces sick days.",
+  "timing": "",
+  "desc": [
+   "Paid leave replaces sick days and is in addition to vacation. Paid leave may be used for any reason, including illness. Staff members do not need to give a reason or provide documentation. Paid leave may be used in increments as small as one hour.",
+   "For a planned absence, staff members should tell their supervisor at least seven days ahead when possible. For an unplanned absence, staff members should tell their supervisor as soon as is practical by phone, text or email. Someone else may give notice on their behalf. Staff members will not be asked to find someone to cover their work.",
+   "After an unplanned absence, the staff member fills out the form on their return; the form doesn’t ask for a reason.",
+   "Holy Week (the week before Easter) and the week leading up to Christmas, including Christmas Eve, are the church’s busiest times of the year. During those weeks, the supervisor may deny a request to use paid leave for a planned absence when the church’s work requires the staff member. It does not apply to paid leave used for an illness or another unplanned absence, which may be taken at any time."
+  ],
+  "extras": []
+ },
+ {
+  "id": "comp",
+  "title": "Compensatory Time",
+  "blurb": "For exempt staff members, time off in return for approved extra hours.",
+  "timing": "Planned",
+  "desc": [
+   "Compensatory time is available only to exempt staff members. An exempt staff member who works extra hours with their supervisor’s advance approval may later take equal time off, with supervisor permission. Compensatory time may not be taken for more than three days in a row or accumulated beyond three days."
+  ],
+  "extras": [
+   {
+    "id": "extraHours",
+    "type": "text",
+    "label": "When did you work the extra hours?",
+    "hint": "For example, \"Sat., Oct. 3, youth retreat, 6 hours.\"",
+    "req": true
+   }
+  ]
+ },
+ {
+  "id": "unpaid",
+  "title": "Short Unpaid Time Off",
+  "blurb": "Up to five workdays a year for an unforeseen need.",
+  "timing": "Unplanned",
+  "desc": [
+   "A staff member may ask for unpaid time off for an unforeseen need, such as an illness, a family emergency or a death in the family. The pastor and the SPRC chair or co-chairs review every such request. This unpaid time off is limited to five scheduled workdays in a calendar year. A staff member must use their vacation first but may choose whether to use their paid leave first.",
+   "A longer unforeseen need is handled as a medical or family leave of absence, whatever its length. Planned time away is taken as vacation or, when vacation doesn’t cover it, as a personal leave (see Long-Term Leaves and Absences)."
+  ],
+  "extras": [
+   {
+    "id": "vacationUsed",
+    "type": "checkbox",
+    "label": "I have used all of my vacation for this year.",
+    "req": true,
+    "err": "Vacation must be used first; please check this box to continue."
+   },
+   {
+    "id": "usePaidFirst",
+    "type": "radio",
+    "label": "Would you like to use your remaining paid leave first?",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "req": true
+   },
+   {
+    "id": "need",
+    "type": "text",
+    "label": "What is the unforeseen need? (optional)",
+    "hint": "A few words are enough, such as \"family emergency.\" Please leave out medical details.",
+    "req": false
+   }
+  ]
+ },
+ {
+  "id": "bereavement",
+  "title": "Bereavement Leave",
+  "blurb": "Three paid days for the death of an immediate family member.",
+  "timing": "",
+  "desc": [
+   "Staff members will receive three days of paid bereavement leave for the death of an immediate family member: spouse, domestic partner, child, parent, brother, sister, grandparent or the in-law of any of these. The supervisor may approve additional time off for travel or other special circumstances. Staff members may use paid leave or vacation for that time or take it without pay."
+  ],
+  "extras": [
+   {
+    "id": "relationship",
+    "type": "select",
+    "label": "Relationship to you",
+    "options": [
+     "Spouse",
+     "Domestic partner",
+     "Child",
+     "Parent",
+     "Brother",
+     "Sister",
+     "Grandparent",
+     "In-law of one of these"
+    ],
+    "req": true
+   },
+   {
+    "id": "extraTime",
+    "type": "radio",
+    "label": "If you need more than three days, how would you like to cover the extra time?",
+    "options": [
+     "I don't need extra time",
+     "Paid leave",
+     "Vacation",
+     "Without pay"
+    ],
+    "req": true
+   }
+  ]
+ },
+ {
+  "id": "civic",
+  "title": "Jury Duty or Voting",
+  "blurb": "Paid time to serve on a jury or to vote on an election day.",
+  "timing": "Planned",
+  "desc": [
+   "Short-term absences resulting from jury duty will not be charged against a staff member’s paid leave or vacation. Staff members will be paid their regular base rate for authorized absences to serve as a juror, up to a limit of two workweeks per calendar year.",
+   "A staff member who is entitled to vote may take up to two hours of paid time off to vote on an election day. They should ask their supervisor before election day; the supervisor may set the hours. It is not charged against paid leave or vacation."
+  ],
+  "extras": [
+   {
+    "id": "civicType",
+    "type": "radio",
+    "label": "Which is this for?",
+    "options": [
+     "Jury duty",
+     "Voting"
+    ],
+    "req": true
+   }
+  ]
+ },
+ {
+  "id": "personal",
+  "title": "Personal Leave",
+  "blurb": "Planned unpaid time away of up to three weeks.",
+  "timing": "Planned",
+  "notice": 30,
+  "desc": [
+   "Personal – An absence of up to three weeks. Personal leave may be used for any reason other than those below, such as a visit to family abroad, education or personal business. It is also the only way to take planned unpaid time off, even when the absence is shorter than two weeks.",
+   "A staff member who has worked at First UMC for at least one year may take one personal leave in any two-year period and should ask for it at least 30 days ahead. A personal leave and any vacation combined with it may not last more than three weeks in a row.",
+   "In deciding a request, SPRC considers the church’s needs at that time of year, including Holy Week and Christmas, whether the staff member’s work can be covered and the other leave the staff member has taken in the past year. SPRC does not weigh the reason for the leave and will give the reason for any denial in writing. The staff member’s position will be held through an approved personal leave.",
+   "A staff member who needs a leave of absence should ask the pastor in writing. The pastor will bring the request, with a recommendation, to SPRC, which will decide."
+  ],
+  "extras": [
+   {
+    "id": "withVacation",
+    "type": "radio",
+    "label": "Will you combine this leave with vacation?",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "req": true
+   },
+   {
+    "id": "vacationAmount",
+    "type": "text",
+    "label": "If so, how much vacation? (optional)",
+    "hint": "For example, \"1 week.\"",
+    "req": false
+   }
+  ]
+ },
+ {
+  "id": "loa",
+  "title": "Medical, Family, or Parental Leave",
+  "blurb": "A leave of absence for your own serious illness, to care for a family member, or for a new child.",
+  "timing": "",
+  "lastLabel": "Expected last day of leave",
+  "desc": [
+   "A leave of absence is unpaid time off of more than two weeks. Staff members who have worked at First UMC for at least three months may apply for an unpaid leave of absence for personal, medical, family or parental reasons.",
+   "Medical and Family – An absence of up to three months. Such leave is for a seriously ill staff member (medical leave) or to care for a child, spouse/partner or parent who is seriously ill (family leave). Before returning from medical leave, the staff member may be required to provide proof of ability to return to work and a list of any work limitations from their treating physician.",
+   "Parental – An absence of up to six weeks for the birth, adoption or guardianship of a child by a staff member.",
+   "A staff member who needs a leave of absence should ask the pastor in writing. The pastor will bring the request, with a recommendation, to SPRC, which will decide. The decision will be given to the staff member in writing. A staff member on leave may choose to use their paid leave and vacation first; the rest of the leave is unpaid. During the leave, the staff member should keep the pastor informed.",
+   "If a leave lasts more than three months, the church cannot guarantee a return to the same position but will make every effort to place the staff member in an open position for which they are qualified."
+  ],
+  "extras": [
+   {
+    "id": "leaveType",
+    "type": "radio",
+    "label": "Type of leave",
+    "options": [
+     "Medical",
+     "Family",
+     "Parental"
+    ],
+    "req": true
+   },
+   {
+    "id": "useBank",
+    "type": "radio",
+    "label": "Would you like to use your paid leave and vacation first?",
+    "options": [
+     "Yes, both",
+     "Paid leave only",
+     "Vacation only",
+     "No, all unpaid"
+    ],
+    "req": true
+   }
+  ]
+ },
+ {
+  "id": "law",
+  "title": "Military or Domestic Violence Leave",
+  "blurb": "Leaves required by law. Please speak with the pastor directly.",
+  "timing": "",
+  "info": true,
+  "desc": [
+   "Military leave and domestic violence leave are required by law. The three-month waiting period and the SPRC approval described above don’t apply to them. The law sets the staff member’s right to return to work. A staff member who needs one of these leaves should tell the pastor. The pastor will tell SPRC only that a staff member is on a leave required by law, without the reason or other details.",
+   "Military – Leave for military service, training, and National Guard or Reserve duty will be provided as required by federal and state law, including the Uniformed Services Employment and Reemployment Rights Act (USERRA).",
+   "Domestic, sexual or gender violence – Up to four weeks of unpaid leave in any 12-month period, as required by the Illinois Victims’ Economic Security and Safety Act (VESSA). This leave is available to a staff member who is a victim, or whose family or household member is a victim, of domestic, sexual or gender violence or another crime of violence. Requests and related information will be kept confidential."
+  ],
+  "extras": []
+ }
+];
+
     const $ = (id) => document.getElementById(id);
-    const banner = document.getElementById('banner');
-    const submitBtn = document.getElementById('submit');
+    const form = $('form');
+    const banner = $('banner');
+    const submitBtn = $('submit');
+    let current = null;
     let busy = false;
 
-    function showBanner(kind, html) {
-      banner.className = 'banner show ' + kind;
-      banner.innerHTML = html;
-      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    $('catGrid').innerHTML = CATEGORIES.map(c =>
+      '<button type="button" class="cat" data-id="' + c.id + '"><strong>' + esc(c.title) + '</strong><span>' + esc(c.blurb) + '</span></button>'
+    ).join('');
+    $('catGrid').addEventListener('click', (e) => {
+      const b = e.target.closest('.cat');
+      if (b) location.hash = b.dataset.id;
+    });
+    $('back').addEventListener('click', () => { location.hash = ''; });
+
+    function extraHtml(x) {
+      const req = x.req ? '<span class="req">*</span>' : '';
+      const hint = x.hint ? '<span class="hint">' + esc(x.hint) + '</span>' : '';
+      const err = '<div class="field-error">' + esc(x.err || 'Please answer this question.') + '</div>';
+      if (x.type === 'text') {
+        return '<div class="form-group" data-field="' + x.id + '"><label for="x_' + x.id + '">' + esc(x.label) + req + hint + '</label>' +
+          '<input type="text" id="x_' + x.id + '">' + err + '</div>';
+      }
+      if (x.type === 'select') {
+        return '<div class="form-group" data-field="' + x.id + '"><label for="x_' + x.id + '">' + esc(x.label) + req + hint + '</label>' +
+          '<select id="x_' + x.id + '"><option value="">Choose one</option>' + x.options.map(o => '<option>' + esc(o) + '</option>').join('') + '</select>' + err + '</div>';
+      }
+      if (x.type === 'checkbox') {
+        return '<div class="form-group" data-field="' + x.id + '"><label class="check"><input type="checkbox" id="x_' + x.id + '"><span>' + esc(x.label) + req + '</span></label>' + err + '</div>';
+      }
+      return '<fieldset class="form-group" data-field="' + x.id + '"><legend>' + esc(x.label) + req + hint + '</legend><div class="choices">' +
+        x.options.map(o => '<label class="choice"><input type="radio" name="x_' + x.id + '" value="' + esc(o) + '"><span>' + esc(o) + '</span></label>').join('') +
+        '</div>' + err + '</fieldset>';
     }
+
+    function show(id) {
+      const c = CATEGORIES.find(k => k.id === id);
+      if (!c) {
+        current = null;
+        $('home').hidden = false;
+        $('detail').hidden = true;
+        return;
+      }
+      current = c;
+      let html = '<h2>' + esc(c.title) + '</h2>' + c.desc.map(p => '<p>' + esc(p) + '</p>').join('');
+      if (c.id === 'loa') html += '<p class="callout">The form below serves as your written request to the pastor.</p>';
+      if (c.info) html += '<p class="callout">To keep these requests confidential, they don\'t go through this form. Please tell the pastor directly, in person or at <a href="mailto:shimel@parkridgeumc.org">shimel@parkridgeumc.org</a>.</p>';
+      html += '<p class="source">From the First UMC Staff Handbook.</p>';
+      $('policy').innerHTML = html;
+      form.reset();
+      form.querySelectorAll('.has-error').forEach(g => g.classList.remove('has-error'));
+      form.style.display = c.info ? 'none' : '';
+      banner.className = 'banner';
+      $('timingGroup').style.display = c.timing === '' && c.id === 'paid' ? '' : 'none';
+      $('lastDayLabel').innerHTML = esc(c.lastLabel || 'Last day off') + '<span class="req">*</span>';
+      $('extras').innerHTML = c.extras.map(extraHtml).join('');
+      $('noticeWarn').className = 'warn';
+      $('home').hidden = true;
+      $('detail').hidden = false;
+      window.scrollTo(0, 0);
+    }
+    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+    show(location.hash.slice(1));
 
     function radio(name) {
       const el = form.querySelector('input[name="' + name + '"]:checked');
       return el ? el.value : '';
     }
 
+    function extraValue(x) {
+      if (x.type === 'radio') return radio('x_' + x.id);
+      if (x.type === 'checkbox') return $('x_' + x.id).checked ? 'Yes' : '';
+      return $('x_' + x.id).value.trim();
+    }
+
     function setError(field, on) {
-      form.querySelector('[data-field="' + field + '"]').classList.toggle('has-error', on);
+      const g = form.querySelector('[data-field="' + field + '"]');
+      if (g) g.classList.toggle('has-error', on);
     }
 
     function collect() {
+      const details = current.extras
+        .map(x => [x.label.replace(/ \(optional\)$/, ''), extraValue(x)])
+        .filter(p => p[1])
+        .map(p => current.extras.find(x => x.label.startsWith(p[0])).type === 'checkbox' ? p[0]
+          : p[0] + (/[?.]$/.test(p[0]) ? ' ' : ': ') + p[1])
+        .join('\n');
       return {
         name: $('name').value.trim(),
         email: $('email').value.trim(),
-        type: radio('type'),
-        timing: radio('timing'),
+        type: current.title,
+        timing: current.id === 'paid' ? radio('timing') : current.timing,
         firstDay: $('firstDay').value,
         lastDay: $('lastDay').value,
         amount: $('amount').value.trim(),
+        details: details,
         notes: $('notes').value.trim(),
         website: $('website').value
       };
@@ -221,43 +543,63 @@
       const checks = {
         name: !!d.name,
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email),
-        type: !!d.type,
-        timing: !!d.timing,
+        timing: current.id !== 'paid' || !!d.timing,
         firstDay: !!d.firstDay,
         lastDay: !!d.lastDay && (!d.firstDay || d.lastDay >= d.firstDay),
         amount: !!d.amount
       };
+      current.extras.forEach(x => { checks[x.id] = !x.req || !!extraValue(x); });
       let first = null;
       for (const k in checks) {
         setError(k, !checks[k]);
         if (!checks[k] && !first) first = k;
       }
       if (first) {
-        const el = form.querySelector('[data-field="' + first + '"] input');
+        const el = form.querySelector('[data-field="' + first + '"] input, [data-field="' + first + '"] select');
         if (el) el.focus();
       }
       return !first;
+    }
+
+    // Personal leave asks for 30 days' notice; warn without blocking.
+    function checkNotice() {
+      const w = $('noticeWarn');
+      if (!current || !current.notice || !$('firstDay').value) { w.className = 'warn'; return; }
+      const days = (new Date($('firstDay').value + 'T00:00') - new Date(new Date().toDateString())) / 86400000;
+      if (days < current.notice) {
+        w.textContent = 'The handbook asks for this request at least ' + current.notice + ' days ahead. You can still submit it.';
+        w.className = 'warn show';
+      } else {
+        w.className = 'warn';
+      }
     }
 
     // Keep the last day from defaulting to before the first day.
     $('firstDay').addEventListener('change', () => {
       $('lastDay').min = $('firstDay').value;
       if (!$('lastDay').value || $('lastDay').value < $('firstDay').value) $('lastDay').value = $('firstDay').value;
+      checkNotice();
     });
 
     form.addEventListener('input', (e) => {
       const g = e.target.closest('[data-field]');
       if (g) g.classList.remove('has-error');
     });
+    form.addEventListener('change', (e) => {
+      const g = e.target.closest('[data-field]');
+      if (g) g.classList.remove('has-error');
+    });
+
+    function showBanner(kind, html) {
+      banner.className = 'banner show ' + kind;
+      banner.innerHTML = html;
+      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     async function doSubmit() {
-      if (busy) return;
+      if (busy || !current) return;
       const d = collect();
       if (!validate(d)) return;
-      if (APPS_SCRIPT_URL.indexOf('PASTE_') === 0) {
-        showBanner('err', 'This form isn\'t connected yet. Please contact the church office.');
-        return;
-      }
       busy = true;
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
@@ -273,14 +615,10 @@
         if (!result.ok) throw new Error(result.error || 'The request could not be saved.');
         form.style.display = 'none';
         showBanner('ok', '<strong>Thank you!</strong> Your request went to the pastor and the church office coordinator. A copy of your request is also on its way to your inbox.' +
-          '<button type="button" class="again" id="again">Submit another request</button>');
-        document.getElementById('again').addEventListener('click', () => {
-          form.reset();
-          form.style.display = '';
-          banner.className = 'banner';
-        });
+          '<button type="button" class="again" id="again">Back to all types of time off</button>');
+        $('again').addEventListener('click', () => { location.hash = ''; });
       } catch (err) {
-        showBanner('err', '<strong>Your request wasn\'t sent.</strong> ' + err.message + ' Please try again, or contact the church office at <a href="mailto:office@parkridgeumc.org">office@parkridgeumc.org</a>.');
+        showBanner('err', '<strong>Your request wasn\'t sent.</strong> ' + esc(err.message) + ' Please try again, or contact the church office at <a href="mailto:office@parkridgeumc.org">office@parkridgeumc.org</a>.');
       } finally {
         busy = false;
         submitBtn.disabled = false;
