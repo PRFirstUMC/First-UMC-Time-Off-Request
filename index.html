@@ -109,6 +109,12 @@
     .warn.show { display: block; }
     .has-error select { border-color: var(--error); }
     #extras .form-group:last-child { margin-bottom: 1.25rem; }
+    .group-title { font-family: 'EB Garamond', serif; font-size: 1.35rem; margin: 0.25rem 0 0.2rem; }
+    .group-note { font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.75rem; }
+    .group-title + .cat-grid { margin-top: 0.6rem; }
+    .cat-grid + .group-title { margin-top: 2rem; }
+    .note { font-size: 0.9rem; padding: 0.75rem 0.9rem; background: #F1E9FE; border-radius: 6px; }
+    [data-hidden] { display: none !important; }
     @media (max-width: 520px) {
       .cat-grid { grid-template-columns: 1fr; }
       .row { grid-template-columns: 1fr; gap: 0; }
@@ -135,7 +141,11 @@
         <p>Please choose the kind of time off you need. Each choice shows what the staff handbook says about it, followed by a short request form. Your request goes to the pastor and the church office coordinator, who keeps a record of each staff member's time off. A copy of your request will also come back to you.</p>
         <p>When an absence is unplanned, please fill out the form when you return.</p>
       </div>
-      <div class="cat-grid" id="catGrid"></div>
+      <h2 class="group-title">Common requests</h2>
+      <div class="cat-grid" id="gridCommon"></div>
+      <h2 class="group-title">Special requests</h2>
+      <p class="group-note">These are for unpaid time and leaves of absence; most of them are reviewed by the pastor and SPRC.</p>
+      <div class="cat-grid" id="gridSpecial"></div>
     </section>
 
     <section id="detail" hidden>
@@ -166,13 +176,23 @@
           <div class="field-error">Please choose one.</div>
         </fieldset>
 
-        <div class="row">
+        <div id="when">
+        <fieldset class="form-group" data-field="length" id="lengthGroup">
+          <legend>How long will you be away?<span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="length" value="Full"><span>One or more full days</span></label>
+            <label class="choice"><input type="radio" name="length" value="Part"><span>Part of a day</span></label>
+          </div>
+          <div class="field-error">Please choose one.</div>
+        </fieldset>
+
+        <div class="row" id="dateRow">
           <div class="form-group" data-field="firstDay">
-            <label for="firstDay">First day off<span class="req">*</span></label>
+            <label for="firstDay" id="firstDayLabel">First day off<span class="req">*</span></label>
             <input type="date" id="firstDay" name="firstDay">
             <div class="field-error">Please choose a date.</div>
           </div>
-          <div class="form-group" data-field="lastDay">
+          <div class="form-group" data-field="lastDay" id="lastDayGroup">
             <label for="lastDay" id="lastDayLabel">Last day off<span class="req">*</span></label>
             <input type="date" id="lastDay" name="lastDay">
             <div class="field-error">Please choose a date on or after the first day.</div>
@@ -180,10 +200,23 @@
         </div>
         <div class="warn" id="noticeWarn"></div>
 
-        <div class="form-group" data-field="amount">
-          <label for="amount">Time requested<span class="req">*</span><span class="hint">For example, "3 days" or "4 hours."</span></label>
+        <div class="form-group" data-field="days" id="daysGroup">
+          <label for="days">How many workdays?<span class="req">*</span></label>
+          <input type="text" id="days" inputmode="decimal">
+          <div class="field-error">Please enter the number of workdays.</div>
+        </div>
+
+        <div class="form-group" data-field="hours" id="hoursGroup">
+          <label for="hours">How many hours?<span class="req">*</span></label>
+          <input type="text" id="hours" inputmode="decimal">
+          <div class="field-error">Please enter the number of hours.</div>
+        </div>
+
+        <div class="form-group" data-field="amount" id="amountGroup">
+          <label for="amount">Length of leave<span class="req">*</span><span class="hint">For example, "3 weeks."</span></label>
           <input type="text" id="amount" name="amount">
-          <div class="field-error">Please enter the days or hours you'll be away.</div>
+          <div class="field-error">Please enter how long you'll be away.</div>
+        </div>
         </div>
 
         <div id="extras"></div>
@@ -219,7 +252,9 @@
    "Vacation time is part of each staff member’s compensation and will be included in their hiring letter. Vacation must be scheduled in advance with the supervisor’s approval, with the church’s needs in mind. Staff members should give at least two weeks’ notice before taking vacation, if at all possible.",
    "Time away of more than two weeks in a row, in any combination of vacation, paid leave and unpaid time, must be approved by the pastor and SPRC."
   ],
-  "extras": []
+  "extras": [],
+  "group": "common",
+  "notice": 14
  },
  {
   "id": "paid",
@@ -232,7 +267,9 @@
    "After an unplanned absence, the staff member fills out the form on their return; the form doesn’t ask for a reason.",
    "Holy Week (the week before Easter) and the week leading up to Christmas, including Christmas Eve, are the church’s busiest times of the year. During those weeks, the supervisor may deny a request to use paid leave for a planned absence when the church’s work requires the staff member. It does not apply to paid leave used for an illness or another unplanned absence, which may be taken at any time."
   ],
-  "extras": []
+  "extras": [],
+  "group": "common",
+  "plannedNotice": 7
  },
  {
   "id": "comp",
@@ -250,43 +287,8 @@
     "hint": "For example, \"Sat., Oct. 3, youth retreat, 6 hours.\"",
     "req": true
    }
-  ]
- },
- {
-  "id": "unpaid",
-  "title": "Short Unpaid Time Off",
-  "blurb": "Up to five workdays a year for an unforeseen need.",
-  "timing": "Unplanned",
-  "desc": [
-   "A staff member may ask for unpaid time off for an unforeseen need, such as an illness, a family emergency or a death in the family. The pastor and the SPRC chair or co-chairs review every such request. This unpaid time off is limited to five scheduled workdays in a calendar year. A staff member must use their vacation first but may choose whether to use their paid leave first.",
-   "A longer unforeseen need is handled as a medical or family leave of absence, whatever its length. Planned time away is taken as vacation or, when vacation doesn’t cover it, as a personal leave (see Long-Term Leaves and Absences)."
   ],
-  "extras": [
-   {
-    "id": "vacationUsed",
-    "type": "checkbox",
-    "label": "I have used all of my vacation for this year.",
-    "req": true,
-    "err": "Vacation must be used first; please check this box to continue."
-   },
-   {
-    "id": "usePaidFirst",
-    "type": "radio",
-    "label": "Would you like to use your remaining paid leave first?",
-    "options": [
-     "Yes",
-     "No"
-    ],
-    "req": true
-   },
-   {
-    "id": "need",
-    "type": "text",
-    "label": "What is the unforeseen need? (optional)",
-    "hint": "A few words are enough, such as \"family emergency.\" Please leave out medical details.",
-    "req": false
-   }
-  ]
+  "group": "common"
  },
  {
   "id": "bereavement",
@@ -314,18 +316,32 @@
     "req": true
    },
    {
+    "id": "needMore",
+    "type": "radio",
+    "label": "Do you need more than three days?",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "req": true
+   },
+   {
     "id": "extraTime",
     "type": "radio",
-    "label": "If you need more than three days, how would you like to cover the extra time?",
+    "label": "How would you like to cover the extra time?",
     "options": [
-     "I don't need extra time",
      "Paid leave",
      "Vacation",
      "Without pay"
     ],
-    "req": true
+    "req": true,
+    "showIf": [
+     "needMore",
+     "Yes"
+    ]
    }
-  ]
+  ],
+  "group": "common"
  },
  {
   "id": "civic",
@@ -346,8 +362,68 @@
      "Voting"
     ],
     "req": true
+   },
+   {
+    "id": "juryNote",
+    "type": "note",
+    "text": "Jury duty is paid at your regular base rate, up to two workweeks per calendar year, and isn't charged against your paid leave or vacation.",
+    "showIf": [
+     "civicType",
+     "Jury duty"
+    ]
+   },
+   {
+    "id": "voteNote",
+    "type": "note",
+    "text": "You may take up to two hours of paid time off to vote. Please ask your supervisor before election day; the supervisor may set the hours.",
+    "showIf": [
+     "civicType",
+     "Voting"
+    ]
    }
-  ]
+  ],
+  "group": "common"
+ },
+ {
+  "id": "unpaid",
+  "title": "Short Unpaid Time Off",
+  "blurb": "Up to five workdays a year for an unforeseen need.",
+  "timing": "Unplanned",
+  "desc": [
+   "A staff member may ask for unpaid time off for an unforeseen need, such as an illness, a family emergency or a death in the family. The pastor and the SPRC chair or co-chairs review every such request. This unpaid time off is limited to five scheduled workdays in a calendar year. A staff member must use their vacation first but may choose whether to use their paid leave first.",
+   "A longer unforeseen need is handled as a medical or family leave of absence, whatever its length. Planned time away is taken as vacation or, when vacation doesn’t cover it, as a personal leave (see Long-Term Leaves and Absences)."
+  ],
+  "extras": [
+   {
+    "id": "vacationUsed",
+    "type": "checkbox",
+    "label": "I have used all of my vacation for this year.",
+    "req": true,
+    "err": "Vacation must be used first; please check this box to continue."
+   },
+   {
+    "id": "usePaidFirst",
+    "type": "radio",
+    "label": "Would you like to use your remaining paid leave first?",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "req": true,
+    "showIf": [
+     "vacationUsed",
+     "Yes"
+    ]
+   },
+   {
+    "id": "need",
+    "type": "text",
+    "label": "What is the unforeseen need? (optional)",
+    "hint": "A few words are enough, such as \"family emergency.\" Please leave out medical details.",
+    "req": false
+   }
+  ],
+  "group": "special"
  },
  {
   "id": "personal",
@@ -375,11 +451,17 @@
    {
     "id": "vacationAmount",
     "type": "text",
-    "label": "If so, how much vacation? (optional)",
+    "label": "How much vacation?",
     "hint": "For example, \"1 week.\"",
-    "req": false
+    "req": true,
+    "showIf": [
+     "withVacation",
+     "Yes"
+    ]
    }
-  ]
+  ],
+  "group": "special",
+  "fullOnly": true
  },
  {
   "id": "loa",
@@ -407,6 +489,33 @@
     "req": true
    },
    {
+    "id": "medNote",
+    "type": "note",
+    "text": "Medical leave is for a seriously ill staff member and may last up to three months. Before returning, you may be asked for proof of your ability to return to work and a list of any work limitations from your treating physician.",
+    "showIf": [
+     "leaveType",
+     "Medical"
+    ]
+   },
+   {
+    "id": "famNote",
+    "type": "note",
+    "text": "Family leave is to care for a child, spouse/partner or parent who is seriously ill, and may last up to three months.",
+    "showIf": [
+     "leaveType",
+     "Family"
+    ]
+   },
+   {
+    "id": "parNote",
+    "type": "note",
+    "text": "Parental leave is for the birth, adoption or guardianship of a child and may last up to six weeks.",
+    "showIf": [
+     "leaveType",
+     "Parental"
+    ]
+   },
+   {
     "id": "useBank",
     "type": "radio",
     "label": "Would you like to use your paid leave and vacation first?",
@@ -418,7 +527,9 @@
     ],
     "req": true
    }
-  ]
+  ],
+  "group": "special",
+  "fullOnly": true
  },
  {
   "id": "law",
@@ -431,7 +542,8 @@
    "Military – Leave for military service, training, and National Guard or Reserve duty will be provided as required by federal and state law, including the Uniformed Services Employment and Reemployment Rights Act (USERRA).",
    "Domestic, sexual or gender violence – Up to four weeks of unpaid leave in any 12-month period, as required by the Illinois Victims’ Economic Security and Safety Act (VESSA). This leave is available to a staff member who is a victim, or whose family or household member is a victim, of domestic, sexual or gender violence or another crime of violence. Requests and related information will be kept confidential."
   ],
-  "extras": []
+  "extras": [],
+  "group": "special"
  }
 ];
 
@@ -444,10 +556,10 @@
 
     const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    $('catGrid').innerHTML = CATEGORIES.map(c =>
-      '<button type="button" class="cat" data-id="' + c.id + '"><strong>' + esc(c.title) + '</strong><span>' + esc(c.blurb) + '</span></button>'
-    ).join('');
-    $('catGrid').addEventListener('click', (e) => {
+    const card = (c) => '<button type="button" class="cat" data-id="' + c.id + '"><strong>' + esc(c.title) + '</strong><span>' + esc(c.blurb) + '</span></button>';
+    $('gridCommon').innerHTML = CATEGORIES.filter(c => c.group === 'common').map(card).join('');
+    $('gridSpecial').innerHTML = CATEGORIES.filter(c => c.group === 'special').map(card).join('');
+    $('home').addEventListener('click', (e) => {
       const b = e.target.closest('.cat');
       if (b) location.hash = b.dataset.id;
     });
@@ -457,6 +569,9 @@
       const req = x.req ? '<span class="req">*</span>' : '';
       const hint = x.hint ? '<span class="hint">' + esc(x.hint) + '</span>' : '';
       const err = '<div class="field-error">' + esc(x.err || 'Please answer this question.') + '</div>';
+      if (x.type === 'note') {
+        return '<div class="form-group" data-field="' + x.id + '"><p class="note">' + esc(x.text) + '</p></div>';
+      }
       if (x.type === 'text') {
         return '<div class="form-group" data-field="' + x.id + '"><label for="x_' + x.id + '">' + esc(x.label) + req + hint + '</label>' +
           '<input type="text" id="x_' + x.id + '">' + err + '</div>';
@@ -491,16 +606,14 @@
       form.querySelectorAll('.has-error').forEach(g => g.classList.remove('has-error'));
       form.style.display = c.info ? 'none' : '';
       banner.className = 'banner';
-      $('timingGroup').style.display = c.timing === '' && c.id === 'paid' ? '' : 'none';
-      $('lastDayLabel').innerHTML = esc(c.lastLabel || 'Last day off') + '<span class="req">*</span>';
+      $('timingGroup').style.display = c.id === 'paid' ? '' : 'none';
       $('extras').innerHTML = c.extras.map(extraHtml).join('');
-      $('noticeWarn').className = 'warn';
       $('home').hidden = true;
       $('detail').hidden = false;
+      refresh();
       window.scrollTo(0, 0);
     }
     window.addEventListener('hashchange', () => show(location.hash.slice(1)));
-    show(location.hash.slice(1));
 
     function radio(name) {
       const el = form.querySelector('input[name="' + name + '"]:checked');
@@ -508,9 +621,40 @@
     }
 
     function extraValue(x) {
+      if (x.type === 'note') return '';
       if (x.type === 'radio') return radio('x_' + x.id);
       if (x.type === 'checkbox') return $('x_' + x.id).checked ? 'Yes' : '';
       return $('x_' + x.id).value.trim();
+    }
+
+    // A follow-up question appears only when the answer it depends on is chosen.
+    function visible(x) {
+      if (!x.showIf) return true;
+      const dep = current.extras.find(k => k.id === x.showIf[0]);
+      return visible(dep) && extraValue(dep) === x.showIf[1];
+    }
+    const hide = (el, on) => { if (on) el.setAttribute('data-hidden', ''); else el.removeAttribute('data-hidden'); };
+
+    function refresh() {
+      if (!current) return;
+      const timing = current.id === 'paid' ? radio('timing') : current.timing;
+      // For paid leave, the rest of the form appears once planned or unplanned is chosen.
+      hide($('when'), current.id === 'paid' && !timing);
+      const past = timing === 'Unplanned';
+      const len = current.fullOnly ? 'Full' : radio('length');
+      hide($('lengthGroup'), !!current.fullOnly);
+      hide($('dateRow'), !len);
+      hide($('lastDayGroup'), len === 'Part');
+      hide($('daysGroup'), current.fullOnly || len !== 'Full');
+      hide($('hoursGroup'), len !== 'Part');
+      hide($('amountGroup'), !current.fullOnly);
+      $('firstDayLabel').innerHTML = (len === 'Part' ? (past ? 'Day you were out' : 'Day off') : (past ? 'First day you were out' : 'First day off')) + '<span class="req">*</span>';
+      $('lastDayLabel').innerHTML = esc(current.lastLabel || (past ? 'Last day you were out' : 'Last day off')) + '<span class="req">*</span>';
+      current.extras.forEach(x => {
+        const g = form.querySelector('[data-field="' + x.id + '"]');
+        if (g) hide(g, !visible(x));
+      });
+      checkNotice();
     }
 
     function setError(field, on) {
@@ -518,21 +662,32 @@
       if (g) g.classList.toggle('has-error', on);
     }
 
+    function amountText(len) {
+      if (current.fullOnly) return $('amount').value.trim();
+      const n = (len === 'Part' ? $('hours') : $('days')).value.trim();
+      if (!n) return '';
+      return n + (len === 'Part' ? (n === '1' ? ' hour' : ' hours') : (n === '1' ? ' day' : ' days'));
+    }
+
     function collect() {
-      const details = current.extras
-        .map(x => [x.label.replace(/ \(optional\)$/, ''), extraValue(x)])
+      const shown = current.extras.filter(x => x.type !== 'note' && visible(x));
+      const details = shown
+        .map(x => [x, extraValue(x)])
         .filter(p => p[1])
-        .map(p => current.extras.find(x => x.label.startsWith(p[0])).type === 'checkbox' ? p[0]
-          : p[0] + (/[?.]$/.test(p[0]) ? ' ' : ': ') + p[1])
+        .map(([x, v]) => {
+          const label = x.label.replace(/ \(optional\)$/, '');
+          return x.type === 'checkbox' ? label : label + (/[?.]$/.test(label) ? ' ' : ': ') + v;
+        })
         .join('\n');
+      const len = current.fullOnly ? 'Full' : radio('length');
       return {
         name: $('name').value.trim(),
         email: $('email').value.trim(),
         type: current.title,
         timing: current.id === 'paid' ? radio('timing') : current.timing,
         firstDay: $('firstDay').value,
-        lastDay: $('lastDay').value,
-        amount: $('amount').value.trim(),
+        lastDay: len === 'Part' ? $('firstDay').value : $('lastDay').value,
+        amount: amountText(len),
         details: details,
         notes: $('notes').value.trim(),
         website: $('website').value
@@ -540,15 +695,20 @@
     }
 
     function validate(d) {
+      const len = current.fullOnly ? 'Full' : radio('length');
+      const num = (v) => /^\d+(\.\d+)?$/.test(v.trim()) && parseFloat(v) > 0;
       const checks = {
         name: !!d.name,
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email),
         timing: current.id !== 'paid' || !!d.timing,
-        firstDay: !!d.firstDay,
-        lastDay: !!d.lastDay && (!d.firstDay || d.lastDay >= d.firstDay),
-        amount: !!d.amount
+        length: !!current.fullOnly || !!len,
+        firstDay: !len || !!d.firstDay,
+        lastDay: !len || len === 'Part' || (!!d.lastDay && (!d.firstDay || d.lastDay >= d.firstDay)),
+        days: current.fullOnly || len !== 'Full' || num($('days').value),
+        hours: len !== 'Part' || num($('hours').value),
+        amount: !current.fullOnly || !!d.amount
       };
-      current.extras.forEach(x => { checks[x.id] = !x.req || !!extraValue(x); });
+      current.extras.forEach(x => { if (x.type !== 'note') checks[x.id] = !x.req || !visible(x) || !!extraValue(x); });
       let first = null;
       for (const k in checks) {
         setError(k, !checks[k]);
@@ -561,13 +721,14 @@
       return !first;
     }
 
-    // Personal leave asks for 30 days' notice; warn without blocking.
+    // Vacation asks for two weeks' notice, planned paid leave seven days and personal leave 30; warn without blocking.
     function checkNotice() {
       const w = $('noticeWarn');
-      if (!current || !current.notice || !$('firstDay').value) { w.className = 'warn'; return; }
+      const notice = current && (current.notice || (current.plannedNotice && radio('timing') === 'Planned' ? current.plannedNotice : 0));
+      if (!notice || !$('firstDay').value) { w.className = 'warn'; return; }
       const days = (new Date($('firstDay').value + 'T00:00') - new Date(new Date().toDateString())) / 86400000;
-      if (days < current.notice) {
-        w.textContent = 'The handbook asks for this request at least ' + current.notice + ' days ahead. You can still submit it.';
+      if (days < notice) {
+        w.textContent = 'The handbook asks for this request at least ' + notice + ' days ahead when possible. You can still submit it.';
         w.className = 'warn show';
       } else {
         w.className = 'warn';
@@ -578,7 +739,6 @@
     $('firstDay').addEventListener('change', () => {
       $('lastDay').min = $('firstDay').value;
       if (!$('lastDay').value || $('lastDay').value < $('firstDay').value) $('lastDay').value = $('firstDay').value;
-      checkNotice();
     });
 
     form.addEventListener('input', (e) => {
@@ -588,7 +748,9 @@
     form.addEventListener('change', (e) => {
       const g = e.target.closest('[data-field]');
       if (g) g.classList.remove('has-error');
+      refresh();
     });
+    show(location.hash.slice(1));
 
     function showBanner(kind, html) {
       banner.className = 'banner show ' + kind;
