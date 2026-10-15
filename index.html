@@ -139,7 +139,7 @@
   <main class="container">
     <section id="home">
       <div class="card intro">
-        <p>Please choose the kind of time off you need. Each choice shows what the staff handbook says about it, followed by a short request form. Your request goes to the pastor and the church office coordinator, who keeps a record of each staff member's time off. A copy of your request will also come back to you.</p>
+        <p>Please choose the kind of time off or remote work you need. Each choice shows what the staff handbook says about it, followed by a short request form. Your request goes to the pastor and the church office coordinator, who keeps a record of each staff member's time off and remote work. A copy of your request will also come back to you.</p>
         <p>When an absence is unplanned, please fill out the form when you return.</p>
       </div>
       <h2 class="group-title">Common requests</h2>
@@ -179,7 +179,7 @@
 
         <div id="when">
         <fieldset class="form-group" data-field="length" id="lengthGroup">
-          <legend>How long will you be away?<span class="req">*</span></legend>
+          <legend id="lengthLegend">How long will you be away?<span class="req">*</span></legend>
           <div class="choices">
             <label class="choice"><input type="radio" name="length" value="Full"><span>One or more full days</span></label>
             <label class="choice"><input type="radio" name="length" value="Part"><span>Part of a day</span></label>
@@ -265,7 +265,7 @@
   "blurb": "Time off for any reason, including illness. PTO replaces sick days.",
   "timing": "",
   "desc": [
-   "Paid time off (PTO) replaces sick days and is separate from vacation. You may use it for any reason, including illness, without giving a reason or a doctor's note. You may take it in blocks as small as one hour.",
+   "Paid time off (PTO) replaces sick days. It's a separate balance from your vacation, so hours can't move from one to the other. You may use it for any reason, including illness, without giving a reason or a doctor's note. You may take it in blocks as small as one hour.",
    "Each January 1, the church gives you PTO based on your regular weekly schedule: 13 hours if you work up to 10 hours a week, 26 hours for up to 20, 39 hours for up to 30, and 40 hours for more than 30. New staff members may begin using PTO after 90 days.",
    "Unused PTO doesn't carry over to the next year, except for up to 40 hours added for extra work. It isn't paid out when employment ends.",
    "For a planned absence, please tell your supervisor at least seven days ahead when you can. For an unplanned absence, tell your supervisor as soon as you reasonably can by phone, text, or email; someone else may let them know for you. You won't be asked to find someone to cover your work. Please fill out this form when you return.",
@@ -282,7 +282,7 @@
   "blurb": "For exempt staff members, time off in return for approved extra hours.",
   "timing": "Planned",
   "desc": [
-   "Flex time is open only to exempt staff members; the handbook calls it compensatory time. When you work extra hours with your supervisor's approval ahead of time, you may later take the same amount of time off, with your supervisor's permission.",
+   "Flex time (what the law calls compensatory time) is open only to exempt staff members. When you work extra hours with your supervisor's approval ahead of time, you may later take the same amount of time off, with your supervisor's permission.",
    "You may not take more than three days of flex time in a row or build up more than three days.",
    "Non-exempt staff members don't use flex time. They're paid time and a half for approved hours over 40 in a workweek, or, with their supervisor's approval, they may shift hours within the same week."
   ],
@@ -297,6 +297,50 @@
   ],
   "group": "common",
   "emoji": "🔄"
+ },
+ {
+  "id": "remote",
+  "title": "Remote Work",
+  "blurb": "An occasional day or part of a day working from home.",
+  "timing": "Planned",
+  "dayWord": "remote",
+  "desc": [
+   "Some positions need a staff member at the church building while others don't, so each staff member has a remote work plan based on the responsibilities of their position. Positions with similar responsibilities have the same plan. Your supervisor and the pastor approve your plan, which becomes part of your job description.",
+   "If your plan sets aside regular remote days or hours each week, you don't need this form for them. Please use it for occasional remote work, such as a personal need at home, a building closure, bad weather, or a project that needs uninterrupted time. Your supervisor approves each occasional request ahead of time.",
+   "While you work remotely, please stay reachable by phone and email during your working hours and come in for any in-person duties. Remote work isn't a substitute for child care, and non-exempt staff members record all of their hours as usual.",
+   "The church's rules on technology, confidentiality, and expenses still apply. The church doesn't reimburse home internet, utilities, or furniture when remote work is your choice."
+  ],
+  "extras": [
+   {
+    "id": "remoteReason",
+    "type": "select",
+    "label": "What is the remote work for?",
+    "options": [
+     "A personal need at home",
+     "A building closure or bad weather",
+     "A project that needs uninterrupted time",
+     "A change to my regular remote days",
+     "Something else"
+    ],
+    "req": true
+   },
+   {
+    "id": "reach",
+    "type": "text",
+    "label": "How can people reach you while you work remotely?",
+    "hint": "For example, \"cell phone and email.\"",
+    "req": true
+   },
+   {
+    "id": "duties",
+    "type": "checkbox",
+    "label": "I have no in-person duties during this time, or I've arranged with my supervisor to cover them.",
+    "req": true,
+    "err": "Please check this box, or speak with your supervisor about your in-person duties first."
+   }
+  ],
+  "group": "common",
+  "emoji": "🏠"
  },
  {
   "id": "bereavement",
@@ -665,8 +709,10 @@
       hide($('daysGroup'), current.fullOnly || len !== 'Full');
       hide($('hoursGroup'), len !== 'Part');
       hide($('amountGroup'), !current.fullOnly);
-      $('firstDayLabel').innerHTML = (len === 'Part' ? (past ? 'Day you were out' : 'Day off') : (past ? 'First day you were out' : 'First day off')) + '<span class="req">*</span>';
-      $('lastDayLabel').innerHTML = esc(current.lastLabel || (past ? 'Last day you were out' : 'Last day off')) + '<span class="req">*</span>';
+      const rw = current.dayWord === 'remote';
+      $('lengthLegend').innerHTML = (rw ? 'How long will you work remotely?' : 'How long will you be away?') + '<span class="req">*</span>';
+      $('firstDayLabel').innerHTML = (rw ? (len === 'Part' ? 'Remote day' : 'First remote day') : len === 'Part' ? (past ? 'Day you were out' : 'Day off') : (past ? 'First day you were out' : 'First day off')) + '<span class="req">*</span>';
+      $('lastDayLabel').innerHTML = esc(current.lastLabel || (rw ? 'Last remote day' : past ? 'Last day you were out' : 'Last day off')) + '<span class="req">*</span>';
       current.extras.forEach(x => {
         const g = form.querySelector('[data-field="' + x.id + '"]');
         if (g) hide(g, !visible(x));
